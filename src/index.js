@@ -25,6 +25,7 @@ const typeDefs = `
     title: String!
     body: String!
     published: Boolean!
+    author: User!
   }
 `;
 
@@ -61,19 +62,22 @@ const posts = [
     id: "12434",
     title: "Fake post 1",
     body: "lorem ipsum 1",
-    published: true
+    published: true,
+    author: "123abc1"
   },
   {
     id: "124345",
     title: "Fake post 2",
     body: "lorem ipsum 2",
-    published: false
+    published: false,
+    author: "123ab2c"
   },
   {
     id: "124346",
     title: "Fake post 3",
     body: "lorem ipsum 3",
-    published: true
+    published: true,
+    author: "123ab4c"
   }
 ];
 
@@ -118,6 +122,11 @@ const resolvers = {
       return 0;
     },
     grades: (parent, args, ctx, info) => [99, 80, 92]
+  },
+  Post: {
+    author: (parent, args, ctx, info) => {
+      return users.find(usr => usr.id === parent.author);
+    }
   }
 };
 
