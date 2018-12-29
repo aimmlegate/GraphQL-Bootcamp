@@ -5,8 +5,10 @@ import { GraphQLServer } from "graphql-yoga";
 
 const typeDefs = `
   type Query {
+    greeting(name: String): String!
     me: User!
     post: Post!
+    add(a: Float, b: Float): Float!
   }
 
   type User {
@@ -39,7 +41,21 @@ const resolvers = {
       title: "Fake post",
       body: "lorem ipsum",
       published: true
-    })
+    }),
+    greeting: (parent, args, ctx, info) => {
+      if (args.name) {
+        return `Hello ${args.name}`;
+      } else {
+        return "Hello";
+      }
+    },
+    add: (_, args) => {
+      if (args.a && args.b) {
+        return args.a + args.b;
+      } else {
+        return 0;
+      }
+    }
   }
 };
 
