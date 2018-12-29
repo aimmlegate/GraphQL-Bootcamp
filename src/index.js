@@ -8,7 +8,8 @@ const typeDefs = `
     greeting(name: String): String!
     me: User!
     post: Post!
-    add(a: Float, b: Float): Float!
+    add(array: [Int!]!): Float!
+    grades: [Int!]!
   }
 
   type User {
@@ -50,12 +51,13 @@ const resolvers = {
       }
     },
     add: (_, args) => {
-      if (args.a && args.b) {
-        return args.a + args.b;
+      if (args.array) {
+        return args.array.reduce((acc, v) => acc + v, 0);
       } else {
         return 0;
       }
-    }
+    },
+    grades: (parent, args, ctx, info) => [99, 80, 92]
   }
 };
 
