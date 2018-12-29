@@ -9,7 +9,7 @@ const typeDefs = `
     price: Float!
     releaseYear: Int
     rating: Float
-    inStock: Boolean!
+    inStock: Boolean
   }
 `;
 
