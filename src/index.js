@@ -20,6 +20,7 @@ const typeDefs = `
     email: String!
     age: Int
     posts: [Post!]!
+    comments: [Comment!]!
   }
 
   type Post {
@@ -33,6 +34,7 @@ const typeDefs = `
   type Comment {
     id: ID!
     text: String!
+    author: User!
   }
 `;
 
@@ -42,25 +44,29 @@ const users = [
   {
     id: "123abc1",
     name: "Andrew 1",
-    email: "aaa@aaa.aa"
+    email: "aaa@aaa.aa",
+    comments: ["c123", "c127"]
   },
   {
     id: "123ab2c",
     name: "Andrew 2",
     email: "aaa@aaa.aa",
-    age: 22
+    age: 22,
+    comments: ["c124"]
   },
   {
     id: "123abc3",
     name: "Andrew 3",
     email: "aaa@aaa.aa",
-    age: 23
+    age: 23,
+    comments: ["c125"]
   },
   {
     id: "123ab4c",
     name: "Andrew 4",
     email: "aaa@aaa.aa",
-    age: 21
+    age: 21,
+    comments: ["c126"]
   }
 ];
 
@@ -91,23 +97,28 @@ const posts = [
 const comments = [
   {
     id: "c123",
-    text: "comment 1"
+    text: "comment 1",
+    author: "123abc1"
   },
   {
     id: "c124",
-    text: "comment 2"
+    text: "comment 2",
+    author: "123ab2c"
   },
   {
     id: "c125",
-    text: "comment 3"
+    text: "comment 3",
+    author: "123abc3"
   },
   {
     id: "c126",
-    text: "comment 4"
+    text: "comment 4",
+    author: "123ab4c"
   },
   {
     id: "c127",
-    text: "comment 5"
+    text: "comment 5",
+    author: "123abc1"
   }
 ];
 
@@ -162,6 +173,15 @@ const resolvers = {
   User: {
     posts: (parent, args, ctx, info) => {
       return posts.filter(pst => pst.author === parent.id);
+    },
+    comments: parent => {
+      const setComments = new Set(parent.comments);
+      return comments.filter(cmnt => setComments.has(cmnt.id));
+    }
+  },
+  Comment: {
+    author: parent => {
+      return users.find(usr => usr.id === parent.author);
     }
   }
 };
