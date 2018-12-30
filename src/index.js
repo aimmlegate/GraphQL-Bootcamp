@@ -29,12 +29,14 @@ const typeDefs = `
     body: String!
     published: Boolean!
     author: User!
+    comments: [Comment!]!
   }
 
   type Comment {
     id: ID!
     text: String!
     author: User!
+    post: Post!
   }
 `;
 
@@ -94,27 +96,32 @@ const comments = [
   {
     id: "c123",
     text: "comment 1",
-    author: "123abc1"
+    author: "123abc1",
+    post: "12434"
   },
   {
     id: "c124",
     text: "comment 2",
-    author: "123ab2c"
+    author: "123ab2c",
+    post: "124345"
   },
   {
     id: "c125",
     text: "comment 3",
-    author: "123abc3"
+    author: "123abc3",
+    post: "124346"
   },
   {
     id: "c126",
     text: "comment 4",
-    author: "123ab4c"
+    author: "123ab4c",
+    post: "12434"
   },
   {
     id: "c127",
     text: "comment 5",
-    author: "123abc1"
+    author: "123abc1",
+    post: "12434"
   }
 ];
 
@@ -162,22 +169,20 @@ const resolvers = {
     comments: () => comments
   },
   Post: {
-    author: (parent, args, ctx, info) => {
-      return users.find(usr => usr.id === parent.author);
-    }
+    author: (parent, args, ctx, info) =>
+      users.find(usr => usr.id === parent.author),
+
+    comments: parent => comments.filter(cmnt => cmnt.post === parent.id)
   },
   User: {
-    posts: (parent, args, ctx, info) => {
-      return posts.filter(pst => pst.author === parent.id);
-    },
-    comments: parent => {
-      return comments.filter(cmnt => cmnt.author === parent.id);
-    }
+    posts: (parent, args, ctx, info) =>
+      posts.filter(pst => pst.author === parent.id),
+
+    comments: parent => comments.filter(cmnt => cmnt.author === parent.id)
   },
   Comment: {
-    author: parent => {
-      return users.find(usr => usr.id === parent.author);
-    }
+    author: parent => users.find(usr => usr.id === parent.author),
+    post: parent => posts.find(pst => pst.id === parent.post)
   }
 };
 
