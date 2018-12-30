@@ -222,11 +222,8 @@ const resolvers = {
       const isUserExist = users.some(usr => usr.id === author);
       const isPostExist = posts.some(pst => pst.id === post && pst.published);
 
-      if (!isUserExist) {
-        throw new Error("User not found");
-      }
-      if (!isPostExist) {
-        throw new Error("Post not found");
+      if (!isUserExist || !isPostExist) {
+        throw new Error("User or Post not found");
       }
 
       const newComment = {
