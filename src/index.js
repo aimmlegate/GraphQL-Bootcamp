@@ -227,7 +227,7 @@ const resolvers = {
       }
 
       const newComment = {
-        id: uuidv4,
+        id: uuidv4(),
         text,
         author,
         post
