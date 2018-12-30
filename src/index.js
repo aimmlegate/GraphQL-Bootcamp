@@ -11,6 +11,7 @@ const typeDefs = `
     add(array: [Int!]!): Float!
     grades: [Int!]!
     users(query: String): [User!]!
+    comments: [Comment!]!
   }
 
   type User {
@@ -27,6 +28,11 @@ const typeDefs = `
     body: String!
     published: Boolean!
     author: User!
+  }
+
+  type Comment {
+    id: ID!
+    text: String!
   }
 `;
 
@@ -82,6 +88,29 @@ const posts = [
   }
 ];
 
+const comments = [
+  {
+    id: "c123",
+    text: "comment 1"
+  },
+  {
+    id: "c124",
+    text: "comment 2"
+  },
+  {
+    id: "c125",
+    text: "comment 3"
+  },
+  {
+    id: "c126",
+    text: "comment 4"
+  },
+  {
+    id: "c127",
+    text: "comment 5"
+  }
+];
+
 // Resolvers
 
 const resolvers = {
@@ -122,7 +151,8 @@ const resolvers = {
       }
       return 0;
     },
-    grades: (parent, args, ctx, info) => [99, 80, 92]
+    grades: (parent, args, ctx, info) => [99, 80, 92],
+    comments: () => comments
   },
   Post: {
     author: (parent, args, ctx, info) => {
