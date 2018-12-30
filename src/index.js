@@ -44,29 +44,25 @@ const users = [
   {
     id: "123abc1",
     name: "Andrew 1",
-    email: "aaa@aaa.aa",
-    comments: ["c123", "c127"]
+    email: "aaa@aaa.aa"
   },
   {
     id: "123ab2c",
     name: "Andrew 2",
     email: "aaa@aaa.aa",
-    age: 22,
-    comments: ["c124"]
+    age: 22
   },
   {
     id: "123abc3",
     name: "Andrew 3",
     email: "aaa@aaa.aa",
-    age: 23,
-    comments: ["c125"]
+    age: 23
   },
   {
     id: "123ab4c",
     name: "Andrew 4",
     email: "aaa@aaa.aa",
-    age: 21,
-    comments: ["c126"]
+    age: 21
   }
 ];
 
@@ -175,8 +171,7 @@ const resolvers = {
       return posts.filter(pst => pst.author === parent.id);
     },
     comments: parent => {
-      const setComments = new Set(parent.comments);
-      return comments.filter(cmnt => setComments.has(cmnt.id));
+      return comments.filter(cmnt => cmnt.author === parent.id);
     }
   },
   Comment: {
