@@ -220,7 +220,7 @@ const resolvers = {
       const { text, author, post } = args;
 
       const isUserExist = users.some(usr => usr.id === author);
-      const isPostExist = posts.some(pst => pst.id === post);
+      const isPostExist = posts.some(pst => pst.id === post && pst.published);
 
       if (!isUserExist) {
         throw new Error("User not found");
