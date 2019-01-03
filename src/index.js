@@ -16,9 +16,28 @@ const typeDefs = `
   }
 
   type Mutation {
-    createUser(name: String!, email: String!, age: Int): User!
-    createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
-    createComment(text: String!, author: ID!, post: ID!): Comment!
+    createUser(data: CreateUserInput): User!
+    createPost(data: CreatePostInput): Post!
+    createComment(data: CreateCommentInput): Comment!
+  }
+
+  input CreateUserInput {
+    name: String!
+    email: String!
+    age: Int
+  }
+
+  input CreatePostInput {
+    title: String!
+    body: String!
+    published: Boolean!
+    author: ID!
+  }
+
+  input CreateCommentInput {
+    text: String!
+    author: ID!
+    post: ID!
   }
 
   type User {
@@ -177,7 +196,7 @@ const resolvers = {
   },
   Mutation: {
     createUser: (parent, args, ctx, info) => {
-      const { email } = args;
+      const { email } = args.data;
       const isEmailTaken = users.some(usr => usr.email === email);
       if (isEmailTaken) {
         throw new Error("Email is taken");
@@ -185,7 +204,7 @@ const resolvers = {
 
       const newUser = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
 
       users.push(newUser);
@@ -194,7 +213,7 @@ const resolvers = {
     },
 
     createPost: (parent, args, ctx, info) => {
-      const { author } = args;
+      const { author } = args.data;
       const isUserExist = users.some(usr => usr.id === author);
 
       if (!isUserExist) {
@@ -203,7 +222,7 @@ const resolvers = {
 
       const newPost = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
 
       posts.push(newPost);
@@ -212,7 +231,7 @@ const resolvers = {
     },
 
     createComment: (parent, args, ctx, info) => {
-      const { author, post } = args;
+      const { author, post } = args.data;
 
       const isUserExist = users.some(usr => usr.id === author);
       const isPostExist = posts.some(pst => pst.id === post && pst.published);
@@ -223,7 +242,7 @@ const resolvers = {
 
       const newComment = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
 
       comments.push(newComment);
