@@ -159,6 +159,9 @@ const Mutation = {
   updateComment: (parent, args, { db }) => {
     const { id, data } = args;
     let user = db.comments.find(cmnt => cmnt.id === id);
+    if (!user) {
+      throw new Error("Comment not found");
+    }
     if (typeof data.text === "string") {
       user.text = data.text;
     }
