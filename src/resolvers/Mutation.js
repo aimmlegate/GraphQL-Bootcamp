@@ -154,6 +154,15 @@ const Mutation = {
     const deletedComment = db.comments.find(cmnt => cmnt.id === id);
     db.comments = db.comments.filter(cmnt => cmnt.id !== id);
     return deletedComment;
+  },
+
+  updateComment: (parent, args, { db }) => {
+    const { id, data } = args;
+    let user = db.comments.find(cmnt => cmnt.id === id);
+    if (typeof data.text === "string") {
+      user.text = data.text;
+    }
+    return user;
   }
 };
 
