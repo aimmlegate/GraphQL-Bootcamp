@@ -19,6 +19,7 @@ const typeDefs = `
     createUser(data: CreateUserInput!): User!
     deleteUser(id: ID!): User!
     createPost(data: CreatePostInput!): Post!
+    deletePost(id: ID!): Post!
     createComment(data: CreateCommentInput!): Comment!
   }
 
@@ -229,6 +230,26 @@ const resolvers = {
       posts.push(newPost);
 
       return newPost;
+    },
+
+    deletePost: (parent, args) => {
+      const { id } = args;
+      const isPostExist = posts.some(pst => pst.id === id);
+
+      if (!isPostExist) {
+        throw new Error(" Post not found");
+      }
+
+      const deletedPost = posts.find(pst => pst.id === id);
+      posts = posts.filter(pst => {
+        const isMatch = pst.id === id;
+        if (isMatch) {
+          comments = comments.filter(cmnt => cmnt.post !== pst.id);
+        }
+        return !isMatch;
+      });
+
+      return deletedPost;
     },
 
     deleteUser: (parent, args) => {
