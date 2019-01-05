@@ -109,7 +109,7 @@ const Mutation = {
       throw new Error("User not found");
     }
 
-    const deletedUsers = db.users.splice(userIndex, 1);
+    const [deletedUsers] = db.users.splice(userIndex, 1);
 
     db.posts = db.posts.filter(pst => {
       const isMatch = pst.author === id;
@@ -123,7 +123,7 @@ const Mutation = {
 
     db.comments = db.comments.filter(cmnt => cmnt.author !== id);
 
-    return deletedUsers[0];
+    return deletedUsers;
   },
 
   updateUser: (parent, args, { db }, info) => {
