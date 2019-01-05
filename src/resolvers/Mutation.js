@@ -34,13 +34,13 @@ const Mutation = {
     db.posts.push(newPost);
 
     if (newPost.published) {
-      pubsub.publish("post", { post: newPost });
+      pubsub.publish("post", { post: { mutation: "CREATED", data: newPost } });
     }
 
     return newPost;
   },
 
-  deletePost: (parent, args, { db }) => {
+  deletePost: (parent, args, { db, pubsub }) => {
     const { id } = args;
     const isPostExist = db.posts.some(pst => pst.id === id);
 
@@ -57,12 +57,20 @@ const Mutation = {
       return !isMatch;
     });
 
+    if (deletedPost.published) {
+      pubsub.publish("post", {
+        post: { mutation: "DELETED", data: deletedPost }
+      });
+    }
+
     return deletedPost;
   },
 
-  updatePost: (parent, args, { db }) => {
+  updatePost: (parent, args, { db, pubsub }) => {
     const { id, data } = args;
     let post = db.posts.find(pst => pst.id === id);
+    const originalPost = { ...post };
+
     if (!post) {
       throw new Error("Post not found");
     }
@@ -75,7 +83,22 @@ const Mutation = {
     }
     if (typeof data.published === "boolean") {
       post.published = data.published;
+
+      if (originalPost.published && !post.published) {
+        pubsub.publish("post", {
+          post: { mutation: "DELETED", data: originalPost }
+        });
+      } else if (!originalPost.published && post.published) {
+        pubsub.publish("post", {
+          post: { mutation: "CREATED", data: post }
+        });
+      }
+    } else if (post.published) {
+      pubsub.publish("post", {
+        post: { mutation: "UPDATED", data: post }
+      });
     }
+
     return post;
   },
 
